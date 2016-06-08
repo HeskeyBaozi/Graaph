@@ -1,6 +1,6 @@
 #include "Graph.h"
-#define NIL -1
-#define INF 9999
+#include <deque>
+#include "Attr.h"
 using namespace std;
 
 /*
@@ -11,78 +11,148 @@ using namespace std;
 */
 void Graph::BFS(int s, function<void(int)> visit)
 {
-	auto Show = [](const deque<int>& Q)
-	{
-		cout << "Q = [ ";
-		for (const auto& ele : Q)
-		{
-			cout << ele << " ";
-		}
-		cout << "]" << endl;
-	};
-
-	enum color
-	{
-		White, Gery, Black
-	};
-
-	class MyAttr
-	{
-	public:
-		explicit MyAttr(color mycolor = White,
-			int distance = INF,
-			int pi = NIL)
-			: _color(mycolor), _d(distance), _parent(pi)
-		{
-		}
-		color _color;
-		int _d;
-		int _parent;
-	};
-
 	// ****************************
 	//        inittalization
 	// ****************************
 
-	// 顶点额外的属性库
-	map<int, MyAttr> $;
-
-	// 初始化所有顶点
-	for (const auto& pair : _Adj_List)
+	map<int, BFS_Attr> $;
+	const set<int> V = _V();
+	for (const auto& each_vertex : V)
 	{
-		$.emplace(pair.first, MyAttr());
+		$[each_vertex] = BFS_Attr();
 	}
+	$[s] = BFS_Attr(GERY, 0, NIL);
 
-	// 初始化源顶点
-	$[s] = MyAttr
-		(Gery, 0, NIL);
-
-	// 正常队列Q
 	deque<int> Q;
-
-	// 源点入列
+	visit(s);
 	Q.push_back(s);
-
 
 	// ****************************
 	//            loop
 	// ****************************
-	//  队列Q中里面包含的结点都是 Gery 的
 	while (!Q.empty())
 	{
 		int u = Q.front(); Q.pop_front();
-		set<int> V = _V();
-		for (const int& v : V)
+#ifdef WEIGHT_GRAPH
+		// 距离包含权重
+		set<Pair> VPair = _Adj_List[u];
+		for(const Pair& tuple:VPair)
 		{
-			if ($[v]._color == White)
+			const int v = tuple.To;
+			if ($[v]._color == WHITE)
 			{
 				visit(v);
 				$[v] = MyAttr
-					(Gery, $[u]._d + 1, u);
+					(GERY, $[u]._d + tuple.Weight, u);
 				Q.push_back(v);
 			}
 		}
-		$[u]._color = Black;
-		Show(Q);
+#endif
+#ifndef WEIGHT_GRAPH
+		// 距离不包含权重
+		set<int> V_Adj = _Adj(u);
+		for (const int& v : V_Adj)
+		{
+			if ($[v]._color == WHITE)
+			{
+				visit(v);
+				$[v] = BFS_Attr
+					(GERY, $[u]._distance + 1, u);
+				Q.push_back(v);
+			}
+		}
+#endif
+		$[u]._color = BLACK;
 	}
+#ifdef PRINT_PATH
+	// ****************************
+	//      打印一颗广度优先树
+	// ****************************
+	function<void(int,int)> Print_Path 
+		= [&](int source, int des)
+	{
+		if (source == des)
+			cout << source << endl;
+		else if ($[des]._parent == NIL)
+			cout << "No path from " << source << " to " << des << " exists." << endl;
+		else
+		{
+			/* 关键步骤 */
+			/* 打印完所有的前驱顶点才打印目标结点 */
+			Print_Path(source, $[des]._parent);
+			cout << des << endl;
+			cout << "距离为" << $[des]._d << endl;
+		}
+		return;
+	};
+
+	// Test Print
+	cout << "\n测试打印路径: " << endl;
+	Print_Path(s, 2);
+#endif
+}
+
+
+/*
+*  Depth First Search
+*  Args:
+*           s: 表示源结点, 类型为 int
+*       visit: 访问回调函数, 类型为 function<>
+*/
+void Graph::DFS(function<void(int)> visit)
+{
+
+	map<int, DFS_Attr> $;
+
+	/*
+	* 初始化: 结点涂白, 前驱节点为空
+	*/
+	const set<int> V = _V();
+	for (const int& each_vertex : V)
+	{
+		$[each_vertex] = DFS_Attr(WHITE, NIL);
+	}
+
+	/*
+	* 全局时间计数器复位
+	*/
+	int time = 0;
+
+	function<void(int)> DFS_Visit = [&](const int u)
+	{
+		++time; // white vertex u has just been discovered
+		$[u]._discovered = time;
+		$[u]._color = GERY;
+		visit(u);
+		set<int> V_Adj = _Adj(u);
+		for (const int& v : V_Adj) // explore edge (u -> v)
+		{
+			if ($[v]._color == WHITE)
+			{
+				$[v]._parent = u;
+				DFS_Visit(v);
+			}
+		}
+		$[u]._color = BLACK; // blacken u; it's finished
+		++time;
+		$[u]._finished = time;
+	};
+
+
+	/*
+	* 依次对每个结点进行检查
+	*/
+	for (const int& u : V)
+	{
+		if ($[u]._color == WHITE)
+		{
+			/*
+			* 每次调用DFS_Visit时, 结点u便成为
+			* 深度优先森林中一颗新的深度优先树的根结点
+			*/
+			DFS_Visit(u);
+		}
+	}
+
+	
 }

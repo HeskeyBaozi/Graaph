@@ -2,10 +2,7 @@
 using namespace std;
 #define DEBUG
 
-Pair::Pair(int to, int w)
-	:To(to), Weight(w)
-{
-}
+
 
 Graph::Graph(int VertexNumber)
 	:_Adj_List()
@@ -16,15 +13,31 @@ Graph::Graph(int VertexNumber)
 	}
 }
 
+Graph::Graph(const vector<vector<int>>& matrix)
+	:_Adj_List()
+{
+	int size = matrix.size();
+	for (int i = 0; i != size; ++i)
+	{
+		for (int j = 0; j != size; ++j)
+		{
+			if (matrix[i][j] != 0)
+			{
+				insertEdge(i, j, matrix[i][j]);
+			}
+		}
+	}
+}
+
 void Graph::insertVertex(int from)
 {
-	_Adj_List.insert(make_pair(from, vector<Pair>()));
+	_Adj_List.insert(make_pair(from, set<Pair>()));
 }
 
 void Graph::insertEdge(int from, int to, int weight)
 {
-	_Adj_List[from].push_back(Pair(to, weight));
-	_Adj_List[to].push_back(Pair(from, weight));
+	_Adj_List[from].insert(Pair(to, weight));
+	_Adj_List[to].insert(Pair(from, weight));
 }
 
 set<int> Graph::_V()
@@ -36,6 +49,17 @@ set<int> Graph::_V()
 	}
 	return result;
 }
+
+set<int> Graph::_Adj(const int vertex)
+{
+	set<int> result;
+	for(const auto& tuple:_Adj_List[vertex])
+	{
+		result.insert(tuple.To);
+	}
+	return result;
+}
+
 
 void Graph::display() const
 {
@@ -52,3 +76,5 @@ void Graph::display() const
 		cout << endl;
 	}
 }
+
+

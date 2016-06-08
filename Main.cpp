@@ -1,29 +1,29 @@
 #include "Graph.h"
+#include "Test.h"
 using namespace std;
 
-int k(int t, int o)
+void testBFS()
 {
-	return t + o;
-}
-int main()
-{
-	Graph a(6);
-	a.insertEdge(0, 3, 1);
-	a.insertEdge(0, 5, 1);
-	a.insertEdge(0, 1, 1);
-	a.insertEdge(1, 5, 1);
-	a.insertEdge(1, 4, 1);
-	a.insertEdge(5, 4, 1);
-	a.insertEdge(4, 3, 1);
-	a.insertEdge(2, 3, 1);
-	a.insertEdge(2, 4, 1);
-	a.insertEdge(3, 5, 1);
-	a.insertEdge(2, 5, 1);
-	a.insertEdge(2, 0, 1);
+	Graph a(createMatrix());
 	a.display();
-	a.BFS(0,[](int v)
+	cout << endl;
+	a.BFS(4, [](int v)
 	{
 		cout << v << " ";
 	});
+}
+
+void testDFS()
+{
+	Graph a(createMatrix());
+	a.DFS([](int v)
+	{
+		cout << v << " ";
+	});
+}
+
+int main()
+{
+	testDFS();
 	return 0;
 }
