@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <deque>
 #include <functional>
 
 struct Pair
@@ -25,7 +26,10 @@ public:
 	std::set<int> V();
 
 	/* Algorithm */
-	//void BFS(int s, std::function<void>(int vertex));
+	void BFS(int s, std::function<void(int)> visit);
+
+	/* display */
+	void display() const;
 private:
 	std::map<int, std::vector<Pair>> AdjList;
 };
