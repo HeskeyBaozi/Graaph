@@ -25,6 +25,9 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="src\Graph.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.md" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B4E427F9-1E8E-4D15-97DE-E9D24F8958FB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
