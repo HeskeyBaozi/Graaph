@@ -37,10 +37,9 @@ void Graph::insertVertex(int from)
 void Graph::insertEdge(int from, int to, int weight)
 {
 	_Adj_List[from].insert(Pair(to, weight));
-	_Adj_List[to].insert(Pair(from, weight));
 }
 
-set<int> Graph::_V()
+set<int> Graph::_V() const
 {
 	set<int> result;
 	for (const auto& pair : _Adj_List)
@@ -50,10 +49,13 @@ set<int> Graph::_V()
 	return result;
 }
 
-set<int> Graph::_Adj(const int vertex)
+set<int> Graph::_Adj(const int vertex) const
 {
 	set<int> result;
-	for(const auto& tuple:_Adj_List[vertex])
+	set<Pair> tupleset;
+	if (_Adj_List.find(vertex) != _Adj_List.end())
+		tupleset = _Adj_List.at(vertex);
+	for(const auto& tuple: tupleset)
 	{
 		result.insert(tuple.To);
 	}
@@ -77,4 +79,13 @@ void Graph::display() const
 	}
 }
 
-
+list<int> Topological_sort(const Graph& G)
+{
+	list<int> result;
+	auto nothing = [](int u) {};
+	G.DFS(nothing, [&](int u)
+	{
+		result.push_front(u);
+	});
+	return result;
+}

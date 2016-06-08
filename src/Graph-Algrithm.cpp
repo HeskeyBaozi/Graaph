@@ -9,7 +9,7 @@ using namespace std;
 *           s: 表示源结点, 类型为 int
 *       visit: 访问回调函数, 类型为 function<>
 */
-void Graph::BFS(int s, function<void(int)> visit)
+void Graph::BFS(int s, function<void(int)> visit) const
 {
 	// ****************************
 	//        inittalization
@@ -99,7 +99,7 @@ void Graph::BFS(int s, function<void(int)> visit)
 *           s: 表示源结点, 类型为 int
 *       visit: 访问回调函数, 类型为 function<>
 */
-void Graph::DFS(function<void(int)> visit)
+void Graph::DFS(function<void(int)> dOrder, function<void(int)> fOrder) const
 {
 
 	map<int, DFS_Attr> $;
@@ -122,20 +122,23 @@ void Graph::DFS(function<void(int)> visit)
 	{
 		++time; // white vertex u has just been discovered
 		$[u]._discovered = time;
-		$[u]._color = GERY;
-		visit(u);
+		$[u]._color = GERY; // 灰色代表已经访问但未到头的点
+		cout << "(" << u << " ";
+		dOrder(u);
 		set<int> V_Adj = _Adj(u);
 		for (const int& v : V_Adj) // explore edge (u -> v)
 		{
 			if ($[v]._color == WHITE)
 			{
-				$[v]._parent = u;
+				$[v]._parent = u; // 一次递归对应着一次前向边的建立
 				DFS_Visit(v);
 			}
 		}
 		$[u]._color = BLACK; // blacken u; it's finished
 		++time;
 		$[u]._finished = time;
+		fOrder(u);
+		cout << " " << u << ")";		
 	};
 
 
@@ -150,7 +153,9 @@ void Graph::DFS(function<void(int)> visit)
 			* 每次调用DFS_Visit时, 结点u便成为
 			* 深度优先森林中一颗新的深度优先树的根结点
 			*/
+			cout << "root " << u << " :" << endl;
 			DFS_Visit(u);
+			cout << endl;
 		}
 	}
 

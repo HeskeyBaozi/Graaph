@@ -5,6 +5,7 @@
 #include <set>
 #include "Pair.h"
 #include <functional>
+#include <list>
 
 // ถþิชื้
 // ( toVertex, Weight )
@@ -22,13 +23,16 @@ public:
 	void insertEdge(int from, int to, int weight = 1);
 
 	/* Algorithm */
-	void BFS(int s, std::function<void(int)> visit);
-	void DFS(std::function<void(int)> visit);
+	void BFS(int s, std::function<void(int)> visit = nullptr) const;
+	void DFS(std::function<void(int)> dOrder = nullptr, 
+		std::function<void(int)> fOrder = nullptr) const;
 
 	/* display */
 	void display() const;
 private:
 	std::map<int, std::set<Pair>> _Adj_List;
-	std::set<int> _V();
-	std::set<int> _Adj(const int vertex);
+	std::set<int> _V() const;
+	std::set<int> _Adj(const int vertex) const;
 };
+
+std::list<int> Topological_sort(const Graph& G);
