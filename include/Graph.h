@@ -1,28 +1,31 @@
 #pragma once
 #include <iostream>
-#include "Vertex.h"
-#include "Edge.h"
 #include <vector>
 #include <map>
+#include <set>
+#include <functional>
+
+struct Pair
+{
+	Pair(int to, int w);
+	int To;
+	int Weight;
+};
+
 class Graph
 {
 public:
-	Graph();
-	~Graph();
+	explicit Graph(int VertexNumber);
 
-	/* Vertex */
-	void addVertex(const Vertex& v);
+	/* Insert */
+	void insertVertex(int from);
+	void insertEdge(int from, int to, int weight);
 
-	/* Edge */
-	void insertEdge(const Edge& e);
-	void insertEdge(const Vertex a, const Vertex b, int weight = 0);
-	
-	/* get Adj */
-	std::vector<Vertex> getAdj(const Vertex& v);
+	/* Getter */
+	std::set<int> V();
 
-	/* display */
-	void display() const;
+	/* Algorithm */
+	//void BFS(int s, std::function<void>(int vertex));
 private:
-	std::map<Vertex, std::vector<Edge> > __map;
+	std::map<int, std::vector<Pair>> AdjList;
 };
-

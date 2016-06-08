@@ -1,51 +1,36 @@
 #include "Graph.h"
 using namespace std;
 
-Graph::Graph()
+Pair::Pair(int to, int w)
+	:To(to), Weight(w)
 {
 }
 
-Graph::~Graph()
+Graph::Graph(int VertexNumber)
+	:AdjList()
 {
-}
-
-void Graph::addVertex(const Vertex& v)
-{
-	__map.emplace(v, vector<Edge>());
-}
-
-void Graph::insertEdge(const Edge& e)
-{
-	__map[e.from].push_back(e);
-}
-
-void Graph::insertEdge(const Vertex a, const Vertex b, int weight)
-{
-	cout << a.getLabel() << b.getLabel() << weight << endl;
-	__map[a].push_back(Edge(a, b, weight));
-	cout << __map[a].size() << endl;
-	__map[b].push_back(Edge(b, a, weight));
-}
-
-vector<Vertex> Graph::getAdj(const Vertex& v)
-{
-	vector<Vertex> temp;
-	for (const Edge& edge : __map[v])
+	for (int i = 0; i != VertexNumber; ++i)
 	{
-		temp.push_back(edge.to);
+		insertVertex(i);
 	}
-	return temp;
 }
 
-void Graph::display() const
+void Graph::insertVertex(int from)
 {
-	for (const auto& pair : __map)
+	AdjList.insert(make_pair(from, vector<Pair>()));
+}
+
+void Graph::insertEdge(int from, int to, int weight)
+{
+	AdjList[from].push_back(Pair(to, weight));
+}
+
+set<int> Graph::V()
+{
+	set<int> result;
+	for (const auto& pair : AdjList)
 	{
-		cout << pair.first.getLabel() << " : ";
-		for (const auto& edge : pair.second)
-		{
-			cout << "(" << edge.from.getLabel() << ", " << edge.to.getLabel() << ", " << edge.getWeight() << ")  ";
-		}
-		cout << endl;
+		result.insert(pair.first);
 	}
+	return result;
 }
