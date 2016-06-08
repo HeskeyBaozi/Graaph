@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="src\Graph-Algrithm.cpp" />
     <ClCompile Include="src\Graph.cpp" />
   </ItemGroup>
   <ItemGroup>

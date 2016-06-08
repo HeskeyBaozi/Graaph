@@ -22,14 +22,12 @@ public:
 	void insertVertex(int from);
 	void insertEdge(int from, int to, int weight);
 
-	/* Getter */
-	std::set<int> V();
-
 	/* Algorithm */
 	void BFS(int s, std::function<void(int)> visit);
 
 	/* display */
 	void display() const;
 private:
-	std::map<int, std::vector<Pair>> AdjList;
+	std::map<int, std::vector<Pair>> _Adj_List;
+	std::set<int> _V();
 };
