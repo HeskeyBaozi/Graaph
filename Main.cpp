@@ -5,6 +5,6 @@ using namespace std;
 
 int main()
 {
-	testTopo();
+	testPrim();
 	return 0;
 }

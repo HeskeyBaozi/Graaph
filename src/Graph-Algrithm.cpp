@@ -1,5 +1,6 @@
 #include "Graph.h"
 #include <deque>
+#include <queue>
 #include "Attr.h"
 using namespace std;
 
@@ -19,9 +20,9 @@ void Graph::BFS(int s, function<void(int)> visit) const
 	const set<int> V = _V();
 	for (const auto& each_vertex : V)
 	{
-		$[each_vertex] = BFS_Attr();
+		$[each_vertex] = BFS_Attr(each_vertex, NIL, WHITE, INF);
 	}
-	$[s] = BFS_Attr(GERY, 0, NIL);
+	$[s] = BFS_Attr(s, NIL, GERY, 0);
 
 	deque<int> Q;
 	visit(s);
@@ -33,21 +34,6 @@ void Graph::BFS(int s, function<void(int)> visit) const
 	while (!Q.empty())
 	{
 		int u = Q.front(); Q.pop_front();
-#ifdef WEIGHT_GRAPH
-		// 距离包含权重
-		set<Pair> VPair = _Adj_List[u];
-		for(const Pair& tuple:VPair)
-		{
-			const int v = tuple.To;
-			if ($[v]._color == WHITE)
-			{
-				visit(v);
-				$[v] = MyAttr
-					(GERY, $[u]._d + tuple.Weight, u);
-				Q.push_back(v);
-			}
-		}
-#endif
 #ifndef WEIGHT_GRAPH
 		// 距离不包含权重
 		set<int> V_Adj = _Adj(u);
@@ -57,14 +43,16 @@ void Graph::BFS(int s, function<void(int)> visit) const
 			{
 				visit(v);
 				$[v] = BFS_Attr
-					(GERY, $[u]._distance + 1, u);
+					(v, u, GERY, $[u]._distance + 1);
 				Q.push_back(v);
 			}
 		}
 #endif
 		$[u]._color = BLACK;
 	}
+
 #ifdef PRINT_PATH
+
 	// ****************************
 	//      打印一颗广度优先树
 	// ****************************
@@ -81,7 +69,7 @@ void Graph::BFS(int s, function<void(int)> visit) const
 			/* 打印完所有的前驱顶点才打印目标结点 */
 			Print_Path(source, $[des]._parent);
 			cout << des << endl;
-			cout << "距离为" << $[des]._d << endl;
+			cout << "距离为" << $[des]._distance << endl;
 		}
 		return;
 	};
@@ -110,7 +98,7 @@ void Graph::DFS(function<void(int)> dOrder, function<void(int)> fOrder) const
 	const set<int> V = _V();
 	for (const int& each_vertex : V)
 	{
-		$[each_vertex] = DFS_Attr(WHITE, NIL);
+		$[each_vertex] = DFS_Attr(each_vertex, NIL, WHITE);
 	}
 
 	/*
@@ -158,6 +146,46 @@ void Graph::DFS(function<void(int)> dOrder, function<void(int)> fOrder) const
 			cout << endl;
 		}
 	}
+}
 
-	
+list<int> Topological_sort(const Graph& G)
+{
+	list<int> result;
+	auto nothing = [](int u) {};
+	G.DFS(nothing, [&](int u)
+	{
+		result.push_front(u);
+	});
+	return result;
+}
+
+set<Tuple> MST_Prim(const Graph& G, const int root)
+{
+	set<Tuple> Tree_E;
+	set<int> Tree_V;
+	Tree_V.insert(root);
+
+	// PQ: by inc weight
+	priority_queue<Tuple, vector<Tuple>, greater<Tuple>> PQ;
+
+	auto adjtuple = G.getAdjTuple(root);
+	for (const Tuple& edge : adjtuple)
+	{
+		PQ.push(edge);
+	}
+
+	while(!PQ.empty())
+	{
+		Tuple minWeightEdge = PQ.top(); PQ.pop();
+		if (Tree_V.find(minWeightEdge.To) == Tree_V.end())
+		{
+			Tree_V.insert(minWeightEdge.To);
+			Tree_E.insert(minWeightEdge);
+			for (const Tuple& edge : G.getAdjTuple(minWeightEdge.To))
+			{
+				PQ.push(edge);
+			}
+		}
+	}
+	return Tree_E;
 }

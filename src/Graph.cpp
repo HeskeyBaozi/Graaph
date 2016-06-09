@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include <Attr.h>
 using namespace std;
 #define DEBUG
 
@@ -31,12 +32,25 @@ Graph::Graph(const vector<vector<int>>& matrix)
 
 void Graph::insertVertex(int from)
 {
-	_Adj_List.insert(make_pair(from, set<Pair>()));
+	_Adj_List.insert(make_pair(from, set<Tuple>()));
 }
 
 void Graph::insertEdge(int from, int to, int weight)
 {
-	_Adj_List[from].insert(Pair(to, weight));
+	cout << "Tuple: " << Tuple(from, to, weight) << endl;
+	_Adj_List[from].insert(Tuple(from, to, weight));
+	cout << "["<<from<<"] result:" << endl;
+	for(const auto& t:_Adj_List[from])
+	{
+		cout << t;
+	}
+	cout << endl << endl;
+}
+
+void Graph::insertUndirectedEdge(int from, int to, int weight)
+{
+	_Adj_List[from].insert(Tuple(from, to, weight));
+	_Adj_List[to].insert(Tuple(to, from, weight));
 }
 
 set<int> Graph::_V() const
@@ -52,7 +66,7 @@ set<int> Graph::_V() const
 set<int> Graph::_Adj(const int vertex) const
 {
 	set<int> result;
-	set<Pair> tupleset;
+	set<Tuple> tupleset;
 	if (_Adj_List.find(vertex) != _Adj_List.end())
 		tupleset = _Adj_List.at(vertex);
 	for(const auto& tuple: tupleset)
@@ -62,6 +76,30 @@ set<int> Graph::_Adj(const int vertex) const
 	return result;
 }
 
+int Graph::getWeight(const int u, const int v) const
+{
+	try
+	{
+		for (const auto& tuple : _Adj_List.at(u))
+		{
+			if (tuple.To == v)
+				return tuple.Weight;
+		}
+		return INF;
+	}
+	catch(out_of_range ex)
+	{
+		cerr << ex.what() << ". No path from " << u << " to " << v << endl;
+		return INF;
+	}
+
+}
+
+set<Tuple> Graph::getAdjTuple(const int v) const
+{
+	set<Tuple> result = _Adj_List.at(v);
+	return result;
+}
 
 void Graph::display() const
 {
@@ -79,13 +117,3 @@ void Graph::display() const
 	}
 }
 
-list<int> Topological_sort(const Graph& G)
-{
-	list<int> result;
-	auto nothing = [](int u) {};
-	G.DFS(nothing, [&](int u)
-	{
-		result.push_front(u);
-	});
-	return result;
-}

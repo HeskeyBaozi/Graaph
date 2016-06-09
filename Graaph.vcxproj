@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClInclude Include="include\Attr.h" />
     <ClInclude Include="include\Graph.h" />
-    <ClInclude Include="include\Pair.h" />
+    <ClInclude Include="include\Tuple.h" />
     <ClInclude Include="include\Test.h" />
   </ItemGroup>
   <ItemGroup>
@@ -29,7 +29,7 @@
     <ClCompile Include="src\Attr.cpp" />
     <ClCompile Include="src\Graph-Algrithm.cpp" />
     <ClCompile Include="src\Graph.cpp" />
-    <ClCompile Include="src\Pair.cpp" />
+    <ClCompile Include="src\Tuple.cpp" />
     <ClCompile Include="src\Test.cpp" />
   </ItemGroup>
   <ItemGroup>

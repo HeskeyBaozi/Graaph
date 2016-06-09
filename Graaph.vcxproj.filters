@@ -21,10 +21,10 @@
     <ClInclude Include="include\Test.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\Pair.h">
+    <ClInclude Include="include\Attr.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\Attr.h">
+    <ClInclude Include="include\Tuple.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,10 +41,10 @@
     <ClCompile Include="src\Test.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pair.cpp">
+    <ClCompile Include="src\Attr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\Attr.cpp">
+    <ClCompile Include="src\Tuple.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

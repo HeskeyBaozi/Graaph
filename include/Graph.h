@@ -3,7 +3,7 @@
 #include <vector>
 #include <map>
 #include <set>
-#include "Pair.h"
+#include "Tuple.h"
 #include <functional>
 #include <list>
 
@@ -21,6 +21,7 @@ public:
 	/* Insert */
 	void insertVertex(int from);
 	void insertEdge(int from, int to, int weight = 1);
+	void insertUndirectedEdge(int from, int to, int weight = 1);
 
 	/* Algorithm */
 	void BFS(int s, std::function<void(int)> visit = nullptr) const;
@@ -29,10 +30,19 @@ public:
 
 	/* display */
 	void display() const;
-private:
-	std::map<int, std::set<Pair>> _Adj_List;
+
+	/* Set Getter */
 	std::set<int> _V() const;
 	std::set<int> _Adj(const int vertex) const;
+	int getWeight(const int u, const int v) const;
+	std::set<Tuple> getAdjTuple(const int v) const;
+private:
+	std::map<int, std::set<Tuple>> _Adj_List;
 };
 
+/* 拓扑排序 */
 std::list<int> Topological_sort(const Graph& G);
+
+/* 最小生成树 */
+//std::map<int, Pair> MST_Kruskal(const Graph& G);
+std::set<Tuple> MST_Prim(const Graph& G, const int root);
