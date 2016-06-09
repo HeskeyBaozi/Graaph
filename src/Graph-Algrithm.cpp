@@ -7,8 +7,8 @@ using namespace std;
 /*
 *  Breadth First Search
 *  Args:
-*           s: ±íÊ¾Ô´½áµã, ÀàĞÍÎª int
-*       visit: ·ÃÎÊ»Øµ÷º¯Êı, ÀàĞÍÎª function<>
+*           s: è¡¨ç¤ºæºç»“ç‚¹, ç±»å‹ä¸º int
+*       visit: è®¿é—®å›è°ƒå‡½æ•°, ç±»å‹ä¸º function<>
 */
 void Graph::BFS(int s, function<void(int)> visit) const
 {
@@ -35,7 +35,7 @@ void Graph::BFS(int s, function<void(int)> visit) const
 	{
 		int u = Q.front(); Q.pop_front();
 #ifndef WEIGHT_GRAPH
-		// ¾àÀë²»°üº¬È¨ÖØ
+		// è·ç¦»ä¸åŒ…å«æƒé‡
 		set<int> V_Adj = _Adj(u);
 		for (const int& v : V_Adj)
 		{
@@ -54,7 +54,7 @@ void Graph::BFS(int s, function<void(int)> visit) const
 #ifdef PRINT_PATH
 
 	// ****************************
-	//      ´òÓ¡Ò»¿Å¹ã¶ÈÓÅÏÈÊ÷
+	//      æ‰“å°ä¸€é¢—å¹¿åº¦ä¼˜å…ˆæ ‘
 	// ****************************
 	function<void(int,int)> Print_Path 
 		= [&](int source, int des)
@@ -65,17 +65,17 @@ void Graph::BFS(int s, function<void(int)> visit) const
 			cout << "No path from " << source << " to " << des << " exists." << endl;
 		else
 		{
-			/* ¹Ø¼ü²½Öè */
-			/* ´òÓ¡ÍêËùÓĞµÄÇ°Çı¶¥µã²Å´òÓ¡Ä¿±ê½áµã */
+			/* å…³é”®æ­¥éª¤ */
+			/* æ‰“å°å®Œæ‰€æœ‰çš„å‰é©±é¡¶ç‚¹æ‰æ‰“å°ç›®æ ‡ç»“ç‚¹ */
 			Print_Path(source, $[des]._parent);
 			cout << des << endl;
-			cout << "¾àÀëÎª" << $[des]._distance << endl;
+			cout << "è·ç¦»ä¸º" << $[des]._distance << endl;
 		}
 		return;
 	};
 
 	// Test Print
-	cout << "\n²âÊÔ´òÓ¡Â·¾¶: " << endl;
+	cout << "\næµ‹è¯•æ‰“å°è·¯å¾„: " << endl;
 	Print_Path(s, 2);
 #endif
 }
@@ -84,8 +84,8 @@ void Graph::BFS(int s, function<void(int)> visit) const
 /*
 *  Depth First Search
 *  Args:
-*           s: ±íÊ¾Ô´½áµã, ÀàĞÍÎª int
-*       visit: ·ÃÎÊ»Øµ÷º¯Êı, ÀàĞÍÎª function<>
+*           s: è¡¨ç¤ºæºç»“ç‚¹, ç±»å‹ä¸º int
+*       visit: è®¿é—®å›è°ƒå‡½æ•°, ç±»å‹ä¸º function<>
 */
 void Graph::DFS(function<void(int)> dOrder, function<void(int)> fOrder) const
 {
@@ -93,7 +93,7 @@ void Graph::DFS(function<void(int)> dOrder, function<void(int)> fOrder) const
 	map<int, DFS_Attr> $;
 
 	/*
-	* ³õÊ¼»¯: ½áµãÍ¿°×, Ç°Çı½ÚµãÎª¿Õ
+	* åˆå§‹åŒ–: ç»“ç‚¹æ¶‚ç™½, å‰é©±èŠ‚ç‚¹ä¸ºç©º
 	*/
 	const set<int> V = _V();
 	for (const int& each_vertex : V)
@@ -102,7 +102,7 @@ void Graph::DFS(function<void(int)> dOrder, function<void(int)> fOrder) const
 	}
 
 	/*
-	* È«¾ÖÊ±¼ä¼ÆÊıÆ÷¸´Î»
+	* å…¨å±€æ—¶é—´è®¡æ•°å™¨å¤ä½
 	*/
 	int time = 0;
 
@@ -110,7 +110,7 @@ void Graph::DFS(function<void(int)> dOrder, function<void(int)> fOrder) const
 	{
 		++time; // white vertex u has just been discovered
 		$[u]._discovered = time;
-		$[u]._color = GERY; // »ÒÉ«´ú±íÒÑ¾­·ÃÎÊµ«Î´µ½Í·µÄµã
+		$[u]._color = GERY; // ç°è‰²ä»£è¡¨å·²ç»è®¿é—®ä½†æœªåˆ°å¤´çš„ç‚¹
 		cout << "(" << u << " ";
 		dOrder(u);
 		set<int> V_Adj = _Adj(u);
@@ -118,7 +118,7 @@ void Graph::DFS(function<void(int)> dOrder, function<void(int)> fOrder) const
 		{
 			if ($[v]._color == WHITE)
 			{
-				$[v]._parent = u; // Ò»´Îµİ¹é¶ÔÓ¦×ÅÒ»´ÎÇ°Ïò±ßµÄ½¨Á¢
+				$[v]._parent = u; // ä¸€æ¬¡é€’å½’å¯¹åº”ç€ä¸€æ¬¡å‰å‘è¾¹çš„å»ºç«‹
 				DFS_Visit(v);
 			}
 		}
@@ -131,15 +131,15 @@ void Graph::DFS(function<void(int)> dOrder, function<void(int)> fOrder) const
 
 
 	/*
-	* ÒÀ´Î¶ÔÃ¿¸ö½áµã½øĞĞ¼ì²é
+	* ä¾æ¬¡å¯¹æ¯ä¸ªç»“ç‚¹è¿›è¡Œæ£€æŸ¥
 	*/
 	for (const int& u : V)
 	{
 		if ($[u]._color == WHITE)
 		{
 			/*
-			* Ã¿´Îµ÷ÓÃDFS_VisitÊ±, ½áµãu±ã³ÉÎª
-			* Éî¶ÈÓÅÏÈÉ­ÁÖÖĞÒ»¿ÅĞÂµÄÉî¶ÈÓÅÏÈÊ÷µÄ¸ù½áµã
+			* æ¯æ¬¡è°ƒç”¨DFS_Visitæ—¶, ç»“ç‚¹uä¾¿æˆä¸º
+			* æ·±åº¦ä¼˜å…ˆæ£®æ—ä¸­ä¸€é¢—æ–°çš„æ·±åº¦ä¼˜å…ˆæ ‘çš„æ ¹ç»“ç‚¹
 			*/
 			cout << "root " << u << " :" << endl;
 			DFS_Visit(u);
@@ -159,6 +159,15 @@ list<int> Topological_sort(const Graph& G)
 	return result;
 }
 
+/*
+T = {s}
+enqueue edges connected to s in PQ (by inc weight)
+while (!PQ.isEmpty)
+	if (vertex v linked with e = PQ.remove âˆ‰ T)
+		T = T âˆª {v, e}, enqueue edges connected to v
+	else ignore e
+	MST = T
+*/
 set<Tuple> MST_Prim(const Graph& G, const int root)
 {
 	set<Tuple> Tree_E;
