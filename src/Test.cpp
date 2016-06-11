@@ -16,12 +16,11 @@ vector<vector<int>> createMatrix()
 void testBFS()
 {
 	Graph a(createMatrix());
-	a.display();
-	cout << endl;
-	a.BFS(4, [](int v)
+	auto k = BFS(a, 4);
+	for(const auto& tt:k)
 	{
-		cout << v << " ";
-	});
+		cout << tt << endl;
+	}
 }
 
 void testDFS()

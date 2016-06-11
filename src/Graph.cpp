@@ -37,14 +37,7 @@ void Graph::insertVertex(int from)
 
 void Graph::insertEdge(int from, int to, int weight)
 {
-	cout << "Tuple: " << Tuple(from, to, weight) << endl;
 	_Adj_List[from].insert(Tuple(from, to, weight));
-	cout << "["<<from<<"] result:" << endl;
-	for(const auto& t:_Adj_List[from])
-	{
-		cout << t;
-	}
-	cout << endl << endl;
 }
 
 void Graph::insertUndirectedEdge(int from, int to, int weight)
@@ -92,11 +85,14 @@ int Graph::getWeight(const int u, const int v) const
 		cerr << ex.what() << ". No path from " << u << " to " << v << endl;
 		return INF;
 	}
-
 }
 
 set<Tuple> Graph::getAdjTuple(const int v) const
 {
+	if (_Adj_List.find(v) == _Adj_List.end())
+	{
+		return set<Tuple>();
+	}
 	set<Tuple> result = _Adj_List.at(v);
 	return result;
 }

@@ -40,9 +40,17 @@ private:
 	std::map<int, std::set<Tuple>> _Adj_List;
 };
 
+/* 遍历算法 */
+std::set<Tuple> BFS(const Graph& G, const int source);
+std::set<Tuple> DFS(const Graph& G, const int source);
+
 /* 拓扑排序 */
 std::list<int> Topological_sort(const Graph& G);
 
 /* 最小生成树 */
 //std::map<int, Pair> MST_Kruskal(const Graph& G);
 std::set<Tuple> MST_Prim(const Graph& G, const int root);
+
+/* 网络流算法 */
+/* 最大流 */
+int Ford_Fulkerson(const Graph&, const int s, const int t);

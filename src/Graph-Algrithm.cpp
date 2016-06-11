@@ -1,4 +1,4 @@
-#include "Graph.h"
+﻿#include "Graph.h"
 #include <deque>
 #include <queue>
 #include "Attr.h"
@@ -148,6 +148,61 @@ void Graph::DFS(function<void(int)> dOrder, function<void(int)> fOrder) const
 	}
 }
 
+set<Tuple> BFS(const Graph& G, const int source)
+{
+	set<int> BFS_Tree_V;
+	set<Tuple> BSF_Tree_E;
+	queue<int> Q;
+	Q.push(source);
+	BFS_Tree_V.insert(source);
+
+	while(!Q.empty()) // Q is a normal queue;
+	{
+		int u = Q.front(); Q.pop();
+		set<int> neighboor_vertice_of_u = G._Adj(u);
+		for (const int& v : neighboor_vertice_of_u)
+		{
+			// if v is unvisited
+			if (BFS_Tree_V.find(v) == BFS_Tree_V.end())
+			{
+				// visit v;
+				BFS_Tree_V.insert(v);
+				BSF_Tree_E.insert(Tuple(u, v, G.getWeight(u, v)));
+				Q.push(v);
+			}
+		}
+	}
+	return BSF_Tree_E;
+}
+
+set<Tuple> DFS(const Graph& G, const int source)
+{
+	set<int> DFS_Tree_V;
+	set<Tuple> DFS_Tree_E;
+	function<void(int)> _DFS =[&](int u)
+	{
+		cout << '(' << u << ' ';
+		set<Tuple> Adj_Edges_Of_u = G.getAdjTuple(u);
+		for (const Tuple& adj_Edge : Adj_Edges_Of_u)
+		{
+			int v = adj_Edge.To;
+			// if v is unvisited, (u, v) is a tree edge;
+			if (DFS_Tree_V.find(v) == DFS_Tree_V.end())
+			{
+				// visit v;
+				DFS_Tree_V.insert(v);
+				DFS_Tree_E.insert(adj_Edge);
+				_DFS(v);
+			}
+			// if v is explored, bidirectional/back edge
+			// if v is visited, forward / cross edge
+		}
+		cout << ' ' << u << ')';
+	};
+	_DFS(source);
+	return DFS_Tree_E;
+}
+
 list<int> Topological_sort(const Graph& G)
 {
 	list<int> result;
@@ -159,15 +214,6 @@ list<int> Topological_sort(const Graph& G)
 	return result;
 }
 
-/*
-T = {s}
-enqueue edges connected to s in PQ (by inc weight)
-while (!PQ.isEmpty)
-	if (vertex v linked with e = PQ.remove ∉ T)
-		T = T ∪ {v, e}, enqueue edges connected to v
-	else ignore e
-	MST = T
-*/
 set<Tuple> MST_Prim(const Graph& G, const int root)
 {
 	set<Tuple> Tree_E;
@@ -177,8 +223,8 @@ set<Tuple> MST_Prim(const Graph& G, const int root)
 	// PQ: by inc weight
 	priority_queue<Tuple, vector<Tuple>, greater<Tuple>> PQ;
 
-	auto adjtuple = G.getAdjTuple(root);
-	for (const Tuple& edge : adjtuple)
+	set<Tuple> Adj_Edge_Set_Of_Root = G.getAdjTuple(root);
+	for (const Tuple& edge : Adj_Edge_Set_Of_Root)
 	{
 		PQ.push(edge);
 	}
@@ -197,4 +243,10 @@ set<Tuple> MST_Prim(const Graph& G, const int root)
 		}
 	}
 	return Tree_E;
+}
+
+int Ford_Fulkerson(const Graph&, const int s, const int t)
+{
+	// init Max Flow
+	return 1;
 }
